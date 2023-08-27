@@ -3,6 +3,7 @@ const path = require('path')
 const fs = require('fs-extra')
 const {execSync, exec} = require('child_process')
 const logFolderPath = path.resolve(__dirname, 'logs')
+fs.ensureDirSync(logFolderPath)
 const assert = require('assert')
 const cborg = require('cborg')
 const {toString} = require('uint8arrays/to-string')
@@ -89,21 +90,6 @@ const getRunningIpfsProcessPath = () => {
   }
   return `IPFS_PATH=/root/.local/share/plebbit/.ipfs-cli ${path.resolve(ipfsPath)}`
 }
-
-const getIpfsStats = () => {
-  const ipfsPath = getRunningIpfsProcessPath()
-  let bw
-  try {
-    bw = execSync(`${ipfsPath} stats bw`).toString().trim().replaceAll('\n', ', ')
-  }
-  catch (e) {
-    e.message = `failed getIpfsStats() 'ipfs stats bw': ${e.message}`
-    throw e
-  }
-  return bw
-}
-
-fs.ensureDirSync(logFolderPath)
 
 const writeLog = async (subplebbitAddress, log) => {
   const timestamp = new Date().toISOString().split('.')[0]
