@@ -1,7 +1,7 @@
 const {execSync, exec} = require('child_process')
 const fs = require('fs-extra')
 const path = require('path')
-const logFolderPath = path.resolve(__dirname, '..', 'logs')
+const logFolderPath = path.resolve(__dirname, 'logs')
 const assert = require('assert')
 const Debug = require('debug')
 const debugLogs = Debug('pubsub-logger:logs')
