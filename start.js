@@ -79,7 +79,7 @@ const getRunningIpfsProcessPath = () => {
   if (!ipfsPath) {
     throw Error(`no running ipfs process found using 'ps -eo cmd | grep ipfs'`)
   }
-  return path.resolve(ipfsPath)
+  return `IPFS_PATH=/root/.local/share/plebbit/.ipfs-cli ${path.resolve(ipfsPath)}`
 }
 
 const getIpfsStats = () => {

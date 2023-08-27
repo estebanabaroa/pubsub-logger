@@ -26,6 +26,7 @@
     "fs-extra": "11.1.1",
     "http-proxy-agent": "5.0.0",
     "ipfs-http-client": "56.0.2",
+    "node-fetch": "^2.6.7",
     "serve-index": "1.9.1",
     "uint8arrays": "3.1.1"
   }
