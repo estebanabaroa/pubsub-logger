@@ -188,14 +188,20 @@ const pubsubLog = async (subplebbitAddress, ipnsName) => {
 
 // start server
 const port = 39393
+const http = require('http')
 const express = require('express')
-const server = express()
+const app = express()
+const server = http.createServer(app)
 const serveIndex = require('serve-index')
 // make sure directories can be listed
-server.use('/logs', serveIndex(logFolderPath, {'icons': true}))
+app.use('/logs', serveIndex(logFolderPath, {'icons': true}))
 // make sure files can be viewed in the browser
 const setHeaders = (res, path) => {
   res.setHeader('Content-Type', 'text/plain; charset=utf-8')
 }
-server.use('/logs', express.static(logFolderPath, {setHeaders, cacheControl: false}))
+app.use('/logs', express.static(logFolderPath, {setHeaders, cacheControl: false}))
+
+// exit silently on failure so that the cron doesn't log anything
+server.on('error', () => process.exit())
+
 server.listen(port)
