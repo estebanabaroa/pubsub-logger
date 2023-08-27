@@ -1,16 +1,24 @@
-const {execSync, exec} = require('child_process')
-const fs = require('fs-extra')
+const util = require('util')
 const path = require('path')
+const fs = require('fs-extra')
+const {execSync, exec} = require('child_process')
 const logFolderPath = path.resolve(__dirname, 'logs')
 const assert = require('assert')
-const Debug = require('debug')
-const debugLogs = Debug('pubsub-logger:logs')
-Debug.enable('pubsub-logger:*')
 const cborg = require('cborg')
 const {toString} = require('uint8arrays/to-string')
 const {fromString} = require('uint8arrays/from-string')
 const {resolveEnsTxtRecord} = require('./utils/ens')
 const base64 = require('multiformats/bases/base64')
+
+// log to file
+const Debug = require('debug')
+Debug.enable('pubsub-logger:*')
+const debug = Debug('pubsub-logger:logs')
+const debugLogPath = path.resolve(__dirname, 'debug-logs.txt')
+const debugLogs = (...args) =>  {
+  fs.appendFile(debugLogPath, `${new Date().toISOString().split('.')[0]} ${util.format(...args)}}\n`)
+  debug(...args)
+}
 
 const retryTimeout = 60000
 
@@ -200,8 +208,4 @@ const setHeaders = (res, path) => {
   res.setHeader('Content-Type', 'text/plain; charset=utf-8')
 }
 app.use('/logs', express.static(logFolderPath, {setHeaders, cacheControl: false}))
-
-// exit silently on failure so that the cron doesn't log anything
-server.on('error', () => process.exit())
-
 server.listen(port)
